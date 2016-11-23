@@ -115,6 +115,22 @@ RasterMonochrome: class extends RasterPacked {
 		}
 		result
 	}
+	getCentralRegionYAverage: func (regionSize: IntVector2D) -> Int {
+		sumY := 0
+		currentY := 0
+		thisBuffer := this buffer _pointer as Byte*
+		startpoint := this stride * (this size y - regionSize x ) / 2  + (this stride - regionSize x) / 2 + 1
+		thisBuffer += startpoint
+		for (y in 0 .. regionSize y) {
+			for (x in 0 .. regionSize x) {
+				currentY = thisBuffer@
+				sumY += currentY
+				thisBuffer += 1
+			}
+			thisBuffer += (this stride - regionSize x)
+		}
+		sumY /= (regionSize x * regionSize y)
+	}
 	getFirstDerivative: func (x, y: Int) -> (Float, Float) {
 		step := 2
 		sourceStride := this stride
